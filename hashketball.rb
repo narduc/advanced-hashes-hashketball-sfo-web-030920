@@ -189,44 +189,58 @@ end
 ##########################################################
 
 
-
-
 def most_points_scored
- home_index = game_hash[:home][:players][:points].index( game_hash[:home][:players][:points].max)
- away_index = game_hash[:away][:players][:points].index( game_hash[:away][:players][:points].max)
- if game_hash[:home][:players][:points][home_index] > game_hash[:away][:players][:points][away_index]
- high_scorer = game_hash[:home][:players][:name][home_index]
- else
- high_scorer = game_hash[:away][:players][:name][away_index]
- end
- puts “The high scorer is #{high_scorer}.”
+  most_points = 0
+  mvp = ''
+  game_hash.each do |home_away, keys|
+    keys[:players].each do |player|
+      points = player[:points]
+      if points > most_points
+        most_points = points
+        mvp = player[:player_name]
+      end
+    end
+  end
+  mvp
 end
 
 def winning_team
- home_points = game_hash[:home][:players][:points].inject(:+)
- away_points = game_hash[:away][:players][:points].inject(:+)
- if home_points > away_points
- puts “The home team wins #{home_points} to #{away_points}.”
- else
- puts “The away team wins #{away_points} to #{home_points}.”
- end
+  total_points = 0
+  win_team = ''
+  game_hash.each do |home_away, keys|
+    team_points = 0
+    team_name = game_hash[home_away][:team_name]
+    keys[:players].each do |player|
+      points = player[:points]
+      team_points += points
+    end
+    win_team, total_points = team_name, team_points if team_points > total_points
+  end
+  return win_team
 end
 
 def player_with_longest_name
- long_name = “A”
- i = 0
- while i < game_hash[:home][:players][:name].length
- if game_hash[:home][:players][:name][i].length > long_name.length
- long_name = game_hash[:home][:players][:name][i]
- end
- i += 1
- end
- i = 0
- while i < game_hash[:away][:players][:name].length
- if game_hash[:away][:players][:name][i].length > long_name.length
- long_name = game_hash[:away][:players][:name][i]
- end
- i += 1
- end
- long_name
+  longest = ''
+  longest_length = 0
+  game_hash.each do |home_away, keys|
+    keys[:players].each do |player|
+      name_length = player[:player_name].length
+      longest, longest_length = player[:player_name], name_length if name_length > longest_length
+    end
+  end
+  return longest
+end
+
+
+# Super Bonus
+
+def long_name_steals_a_ton?
+  steals_most = ''
+  most_steals = 0
+  game_hash.each do |home_away, keys|
+    keys[:players].each do |player|
+      steals_most, most_steals = player[:player_name], player[:steals] if player[:steals] > most_steals
+    end
+  end
+  return true if steals_most == player_with_longest_name
 end
