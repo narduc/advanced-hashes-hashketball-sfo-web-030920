@@ -184,3 +184,49 @@ def big_shoe_rebounds
   end
   return rebounds
 end
+
+
+##########################################################
+
+
+
+
+def most_points_scored
+ home_index = game_hash[:home][:players][:points].index( game_hash[:home][:players][:points].max)
+ away_index = game_hash[:away][:players][:points].index( game_hash[:away][:players][:points].max)
+ if game_hash[:home][:players][:points][home_index] > game_hash[:away][:players][:points][away_index]
+ high_scorer = game_hash[:home][:players][:name][home_index]
+ else
+ high_scorer = game_hash[:away][:players][:name][away_index]
+ end
+ puts “The high scorer is #{high_scorer}.”
+end
+
+def winning_team
+ home_points = game_hash[:home][:players][:points].inject(:+)
+ away_points = game_hash[:away][:players][:points].inject(:+)
+ if home_points > away_points
+ puts “The home team wins #{home_points} to #{away_points}.”
+ else
+ puts “The away team wins #{away_points} to #{home_points}.”
+ end
+end
+
+def player_with_longest_name
+ long_name = “A”
+ i = 0
+ while i < game_hash[:home][:players][:name].length
+ if game_hash[:home][:players][:name][i].length > long_name.length
+ long_name = game_hash[:home][:players][:name][i]
+ end
+ i += 1
+ end
+ i = 0
+ while i < game_hash[:away][:players][:name].length
+ if game_hash[:away][:players][:name][i].length > long_name.length
+ long_name = game_hash[:away][:players][:name][i]
+ end
+ i += 1
+ end
+ long_name
+end
